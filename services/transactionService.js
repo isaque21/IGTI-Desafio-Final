@@ -7,9 +7,11 @@ const create = async (req, res) => {
   try {
     const transaction = new TransactionModel(req.body);
     await transaction.save();
-    res.send();
+    res.send({ action: true });
   } catch (error) {
-    res.status(500).send({ message: error.message || "Algum erro ocorreu ao salvar" });
+    res
+      .status(500)
+      .send({ action: false, message: error.message || "Algum erro ocorreu ao salvar" });
   }
 };
 
@@ -31,9 +33,11 @@ const findAll = async (req, res) => {
 
   try {
     const transaction = await TransactionModel.find(condition);
-    res.send(transaction);
+    res.send({ action: true, transactions: transaction });
   } catch (error) {
-    res.status(500).send({ message: error.message || "Erro ao listar todos os documentos" });
+    res
+      .status(500)
+      .send({ action: false, message: error.message || "Erro ao listar todos os documentos" });
   }
 };
 
@@ -42,17 +46,15 @@ const findOne = async (req, res) => {
 
   try {
     const transaction = await TransactionModel.findOne({ _id: id });
-    res.send(transaction);
+    res.send({ action: true, transactions: transaction });
   } catch (error) {
-    res.status(500).send({ message: "Erro ao buscar a transação id: " + id });
+    res.status(500).send({ action: false, message: "Erro ao buscar a transação id: " + id });
   }
 };
 
 const update = async (req, res) => {
   if (!req.body) {
-    return res.status(400).send({
-      message: "Dados para atualizacao vazio",
-    });
+    return res.status(400).send({ action: false, message: "Dados para atualizacao vazio" });
   }
 
   const id = req.params.id;
@@ -84,9 +86,9 @@ const update = async (req, res) => {
 
     await transaction.save();
 
-    res.send({ message: "Transação atualizado com sucesso" });
+    res.send({ action: true, message: "Transação atualizado com sucesso" });
   } catch (error) {
-    res.status(500).send({ message: "Erro ao atualizar a transação id: " + id });
+    res.status(500).send({ action: false, message: "Erro ao atualizar a transação id: " + id });
   }
 };
 
@@ -95,9 +97,11 @@ const remove = async (req, res) => {
 
   try {
     await TransactionModel.deleteOne({ _id: id });
-    res.send({ message: "Transação excluido com sucesso" });
+    res.send({ action: true, message: "Transação excluido com sucesso" });
   } catch (error) {
-    res.status(500).send({ message: "Nao foi possivel deletar a transação id: " + id });
+    res
+      .status(500)
+      .send({ action: false, message: "Nao foi possivel deletar a transação id: " + id });
   }
 };
 
@@ -106,10 +110,11 @@ const removeAll = async (req, res) => {
     await TransactionModel.deleteMany();
 
     res.send({
+      action: true,
       message: `Transações excluídas com sucesso`,
     });
   } catch (error) {
-    res.status(500).send({ message: "Erro ao excluir todos as transações" });
+    res.status(500).send({ action: false, message: "Erro ao excluir todos as transações" });
   }
 };
 
