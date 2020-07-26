@@ -4,7 +4,7 @@ import Axios from "axios";
 async function getAll(period) {
   const res = await Axios.get(`/api/transaction?period=${period}`);
 
-  const transactions = res.data.map((transaction) => {
+  const transactions = res.data.transactions.map((transaction) => {
     const { description, category } = transaction;
     return {
       ...transaction,
@@ -17,7 +17,7 @@ async function getAll(period) {
 
 async function get(id) {
   const res = await Axios.get(`/api/transaction/${id}`);
-  const transaction = res.data;
+  const transaction = res.data.transactions;
 
   const { description, category } = transaction;
   return {

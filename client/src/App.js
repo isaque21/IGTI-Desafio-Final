@@ -13,6 +13,7 @@ export default function App() {
   const [selectTransaction, setSelectTransaction] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [period, setPeriod] = useState(now);
+  const [action, setAction] = useState(Date.now());
 
   useEffect(() => {
     const getTransactions = async () => {
@@ -23,7 +24,7 @@ export default function App() {
     };
 
     getTransactions();
-  }, [period]);
+  }, [period, action]);
 
   const handlePeriod = (selectedPeriod) => {
     if (selectedPeriod !== period) {
@@ -32,8 +33,12 @@ export default function App() {
     }
   };
 
-  const handleDelete = (_id) => {
-    console.log("handleDelete" + _id);
+  const handleDelete = async (_id) => {
+    const isDeleted = await api.remove(_id);
+    if (isDeleted.data.action) {
+      setAction(Date.now());
+      setAllTransactions([]);
+    }
   };
 
   const handlePersist = (_id) => {
