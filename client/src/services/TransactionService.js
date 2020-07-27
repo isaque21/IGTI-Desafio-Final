@@ -32,7 +32,7 @@ const create = (data) => {
 };
 
 const update = (id, data) => {
-  return http.put(`/transaction/${id}`, data);
+  return http.put(`/api/transaction/${id}`, data);
 };
 
 const remove = (id) => {

@@ -62,7 +62,11 @@ export default function Select({ onPeriodSelect, onButtonClick }) {
   return (
     <div className="row">
       <div className="col s3">
-        <button className="btn waves-effect waves-light" onClick={handleClickPrevious}>
+        <button
+          className="btn waves-effect waves-light"
+          style={{ zIndex: "unset" }}
+          onClick={handleClickPrevious}
+        >
           <i className=" medium material-icons ">navigate_before</i>
         </button>
       </div>
@@ -76,7 +80,11 @@ export default function Select({ onPeriodSelect, onButtonClick }) {
         </select>
       </div>
       <div className="col s3">
-        <button className="btn waves-effect waves-light" onClick={handleClickNext}>
+        <button
+          className="btn waves-effect waves-light"
+          style={{ zIndex: "unset" }}
+          onClick={handleClickNext}
+        >
           <i className=" medium material-icons ">navigate_next</i>
         </button>
       </div>

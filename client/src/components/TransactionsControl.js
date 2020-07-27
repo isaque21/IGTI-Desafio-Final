@@ -7,6 +7,9 @@ export default function TransactionsControl({ transactions, onDelete, onPersist 
     if (type === "delete") {
       onDelete(_id);
     }
+    if (type === "edit") {
+      onPersist(_id);
+    }
   };
 
   return (
