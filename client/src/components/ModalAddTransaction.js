@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
-import { format, parse } from "date-fns";
+import { format } from "date-fns";
 import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
@@ -9,13 +9,12 @@ import "react-datepicker/dist/react-datepicker.css";
 
 Modal.setAppElement("#root");
 
-export default function ModalTransaction({ onSave, onClose, selectedTransaction }) {
-  const { _id, description, category, value, yearMonthDay, type } = selectedTransaction;
-
-  const [transactionDescription, setTransactionDescription] = useState(description);
-  const [transactionCategory, setTransactionCategory] = useState(category);
-  const [transactionValue, setTransactionValue] = useState(value);
-  const [transactionYearMonthDay, setTransactionYearMonthDay] = useState(yearMonthDay);
+export default function ModalAddTransaction({ onSave, onClose }) {
+  const [transactionDescription, setTransactionDescription] = useState("");
+  const [transactionCategory, setTransactionCategory] = useState("");
+  const [transactionValue, setTransactionValue] = useState("");
+  const [transactionType, setTransactionType] = useState("+");
+  const [transactionYearMonthDay, setTransactionYearMonthDay] = useState(new Date());
 
   useEffect(() => {
     document.addEventListener("keydown", handleKeyDown);
@@ -23,14 +22,6 @@ export default function ModalTransaction({ onSave, onClose, selectedTransaction 
       document.removeEventListener("keydown", handleKeyDown);
     };
   });
-
-  const stringToDate = (date) => {
-    return parse(date, "yyyy-MM-dd", new Date());
-  };
-
-  const dateToString = (date) => {
-    return format(date, "yyyy-MM-dd");
-  };
 
   const handleKeyDown = (event) => {
     if (event.key === "Escape") {
@@ -40,18 +31,18 @@ export default function ModalTransaction({ onSave, onClose, selectedTransaction 
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
-
+    console.log(transactionValue);
     const formData = {
-      id: _id,
+      action: "insert",
       description: transactionDescription,
       category: transactionCategory,
       value: +transactionValue,
-      year: +format(stringToDate(transactionYearMonthDay), "yyyy"),
-      month: +format(stringToDate(transactionYearMonthDay), "MM"),
-      day: +format(stringToDate(transactionYearMonthDay), "dd"),
-      yearMonth: format(stringToDate(transactionYearMonthDay), "yyyy-MM"),
-      yearMonthDay: transactionYearMonthDay,
-      type: type,
+      year: +format(transactionYearMonthDay, "yyyy"),
+      month: +format(transactionYearMonthDay, "MM"),
+      day: +format(transactionYearMonthDay, "dd"),
+      yearMonth: format(transactionYearMonthDay, "yyyy-MM"),
+      yearMonthDay: format(transactionYearMonthDay, "yyyy-MM-dd"),
+      type: transactionType,
     };
     onSave(formData);
   };
@@ -67,14 +58,15 @@ export default function ModalTransaction({ onSave, onClose, selectedTransaction 
   const handleValue = (event) => {
     setTransactionValue(event.target.value);
   };
-  const handleDate = (event) => {
-    setTransactionYearMonthDay(dateToString(event));
+
+  const handleType = (event) => {
+    setTransactionType(event.target.value);
   };
   return (
     <div>
       <Modal isOpen={true}>
         <div style={styles.flexRow}>
-          <span style={styles.title}>Edição de lançamento</span>
+          <span style={styles.title}>Inserção de lançamento</span>
           <button className="waves-effect waves-lights btn red dark-4" onClick={handleModalClose}>
             X
           </button>
@@ -84,23 +76,13 @@ export default function ModalTransaction({ onSave, onClose, selectedTransaction 
           <div style={styles.flexRowRadio}>
             <p>
               <label style={styles.radio}>
-                <input
-                  name="type"
-                  type="radio"
-                  checked={type === "-" && "checked"}
-                  disabled="disabled"
-                />
+                <input name="type" type="radio" value="-" onChange={handleType} />
                 <span>Despesa</span>
               </label>
             </p>
             <p>
               <label style={styles.radio}>
-                <input
-                  name="type"
-                  type="radio"
-                  checked={type === "+" && "checked"}
-                  disabled="disabled"
-                />
+                <input name="type" type="radio" value="+" onChange={handleType} />
                 <span>Receita</span>
               </label>
             </p>
@@ -133,6 +115,7 @@ export default function ModalTransaction({ onSave, onClose, selectedTransaction 
                 id="inputValue"
                 type="number"
                 min="1"
+                step="0.01"
                 value={transactionValue}
                 onChange={handleValue}
               />
@@ -143,8 +126,8 @@ export default function ModalTransaction({ onSave, onClose, selectedTransaction 
             <div className="input-field col s4">
               <DatePicker
                 dateFormat="dd/MM/yyyy"
-                selected={stringToDate(transactionYearMonthDay)}
-                onChange={handleDate}
+                selected={transactionYearMonthDay}
+                onChange={(date) => setTransactionYearMonthDay(date)}
               />
             </div>
           </div>

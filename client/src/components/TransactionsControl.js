@@ -1,50 +1,53 @@
 import React from "react";
 
 import Action from "./Action";
+import { formatMoney } from "../helpers/formatHelpers";
 
-export default function TransactionsControl({ transactions, onDelete, onPersist }) {
+export default function TransactionsControl({ transactions, onDelete, onSelect }) {
   const handleActionClick = (_id, type) => {
     if (type === "delete") {
       onDelete(_id);
     }
     if (type === "edit") {
-      onPersist(_id);
+      onSelect(_id);
     }
   };
 
   return (
-    <div className="container center">
-      <table className="striped">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Descrição</th>
-            <th>Valor</th>
-            <th>Ação</th>
-          </tr>
-        </thead>
-        <tbody>
-          {transactions.map(({ _id, description, category, value, type }) => {
-            return (
-              <tr key={_id} style={{ backgroundColor: type === "+" ? "#1de9b6" : "#ef9a9a" }}>
-                <td>&nbsp;</td>
-                <td>
-                  <p>{category}</p>
-                  <p>{description}</p>
-                </td>
-                <td>{value}</td>
-                <td>
-                  <div>
-                    <Action id={_id} onActionClick={handleActionClick} type="edit" />
-                    <Action id={_id} onActionClick={handleActionClick} type="delete" />
-                  </div>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-        <tfoot></tfoot>
-      </table>
+    <div>
+      {transactions.map(({ _id, description, category, value, day, type }) => {
+        return (
+          <div
+            className="row"
+            key={_id}
+            style={{
+              backgroundColor: type === "+" ? "#43A69B" : "#ef9a9a",
+              paddingTop: 10,
+              paddingBottom: 10,
+              marginBottom: 10,
+              textAlign: "left",
+            }}
+          >
+            <div className="col m1" style={{ marginTop: 10, fontSize: "1.4rem" }}>
+              {day}
+            </div>
+            <div className="col m6">
+              <span style={{ fontWeight: "bold" }}>{category}</span>
+              <br />
+              <span>{description}</span>
+            </div>
+            <div className="col m3" style={{ marginTop: 10, fontSize: "1.4rem" }}>
+              {formatMoney(value)}
+            </div>
+            <div>
+              <div className="col m2">
+                <Action id={_id} onActionClick={handleActionClick} type="edit" />
+                <Action id={_id} onActionClick={handleActionClick} type="delete" />
+              </div>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import React from "react";
+import { formatMoney } from "../helpers/formatHelpers";
 
 export default function Statistics({ transactions }) {
   const totalReleases = transactions.length;
@@ -16,20 +17,37 @@ export default function Statistics({ transactions }) {
   const balance = sumTransactionsValues("+") - sumTransactionsValues("-");
 
   return (
-    <div className="container">
-      <div className="row">
-        <div className="col s3">
-          <span>Lançamentos: {totalReleases} </span>
-        </div>
-        <div className="col s3">
-          <span>Receitas: R$ {sumTransactionsValues("+")}</span>
-        </div>
-        <div className="col s3">
-          <span>Despesas: R$ {sumTransactionsValues("-")}</span>
-        </div>
-        <div className="col s3">
-          <span>Saldo: R$ {balance}</span>
-        </div>
+    <div>
+      <div className="col s3">
+        <span>Lançamentos: {totalReleases} </span>
+      </div>
+      <div className="col s3">
+        Receitas:
+        <span
+          style={{
+            color: "#43A69B",
+          }}
+        >
+          {formatMoney(sumTransactionsValues("+"))}
+        </span>
+      </div>
+      <div className="col s3">
+        Despesas:
+        <span
+          style={{
+            color: "#ef9a9a",
+          }}
+        >
+          {" "}
+          {formatMoney(sumTransactionsValues("-"))}
+        </span>
+      </div>
+      <div className="col s3">
+        Saldo:{" "}
+        <span style={{ color: sumTransactionsValues("+") > 0 ? "#43A69B" : "#ef9a9a" }}>
+          {" "}
+          {formatMoney(balance)}
+        </span>
       </div>
     </div>
   );

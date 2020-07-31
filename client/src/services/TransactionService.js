@@ -44,7 +44,7 @@ const removeAll = () => {
 };
 
 const findByDescription = (description) => {
-  return http.get(`/api/transaction?name=${description}`);
+  return Axios.get(`/api/transaction?description=${description}`);
 };
 
 export { getAll, get, create, update, remove, removeAll, findByDescription };

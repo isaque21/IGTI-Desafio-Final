@@ -6,8 +6,12 @@ export default function Action({ id, type, onActionClick }) {
   };
 
   return (
-    <div>
-      <span className="material-icons" onClick={handleIconClick} style={{ cursor: "pointer" }}>
+    <div className="col s4">
+      <span
+        className="material-icons"
+        onClick={handleIconClick}
+        style={{ cursor: "pointer", marginTop: 10 }}
+      >
         {type}
       </span>
     </div>
